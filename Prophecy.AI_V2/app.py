@@ -26,27 +26,27 @@ def ask_oracle():
     user_question = request.json.get('question')
 
     # Using the replicate API to stream responses
-    try:
-        output = replicate.run(
-            "meta/meta-llama-3-70b-instruct",  # Model ID
-            input={
-                "top_k": 0,
-                "top_p": 0.9,
-                "prompt": f"Please reply only with the prophecy.{user_question}",
-                "max_tokens": 512,
-                "min_tokens": 0,
-                "temperature": 0.6,
-                "system_prompt": "You are a mystical oracle offering prophetic insights. You are an AI oracle with the voice of an ancient prophet. Offer guidance through crafted prophecies, using poetic, mysterious, and metaphorical language.",
-                "length_penalty": 1,
-                "stop_sequences": "<|end_of_text|>,<|eot_id|>",
-                "prompt_template": "<|begin_of_text|><|start_header_id|>system<|end_header_id|>\n\nYou are a mystical oracle offering prophetic insights.<|eot_id|><|start_header_id|>user<|end_header_id|>\n\n{prompt}<|eot_id|><|start_header_id|>assistant<|end_header_id|>\n\n",
-                "presence_penalty": 1.15,
-                "log_performance_metrics": False
-            },
-        )
-        return jsonify({'response': output})
-    except Exception as e:
-        return jsonify({"error": str(e)})
+    response = []
+    for event in replicate.stream(
+        "meta/meta-llama-3-70b-instruct",
+        input={
+            "top_k": 0,
+            "top_p": 0.9,
+            "prompt": f"Please reply only with the prophecy.{user_question}",
+            "max_tokens": 512,
+            "min_tokens": 0,
+            "temperature": 0.6,
+            "system_prompt": "You are a mystical oracle offering prophetic insights. You are an AI oracle with the voice of an ancient prophet. Offer guidance through crafted prophecies, using poetic, mysterious, and metaphorical language.",
+            "length_penalty": 1,
+            "stop_sequences": "<|end_of_text|>,<|eot_id|>",
+            "prompt_template": "<|begin_of_text|><|start_header_id|>system<|end_header_id|>\n\nYou are a mystical oracle offering prophetic insights.<|eot_id|><|start_header_id|>user<|end_header_id|>\n\n{prompt}<|eot_id|><|start_header_id|>assistant<|end_header_id|>\n\n",
+            "presence_penalty": 1.15,
+            "log_performance_metrics": False
+        },
+    ):
+        response.append(str(event))
 
-if __name__ == '__main__':
+    return jsonify({'response': ''.join(response)})
+
+if __name__ == "__main__":
     app.run(host='0.0.0.0', port=8000)
