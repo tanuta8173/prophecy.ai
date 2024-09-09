@@ -1,3 +1,3 @@
-replicate==0.4.0  # or the correct version for `replicate.run`
+replicate==0.32.1  # or the correct version for `replicate.run`
 Flask==2.3.0
 urllib3==1.26.6
