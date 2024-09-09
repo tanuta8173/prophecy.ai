@@ -1,3 +1,8 @@
+from flask import Flask, render_template, request, jsonify
+import os
+import replicate
+import importlib
+
 app = Flask(__name__)
 
 # Ensure the API token is set in the environment
@@ -22,7 +27,7 @@ def ask_oracle():
 
     # Using the replicate API to stream responses
     try:
-        output = replicate.stream(
+        output = replicate.run(
             "meta/meta-llama-3-70b-instruct",  # Model ID
             input={
                 "top_k": 0,
