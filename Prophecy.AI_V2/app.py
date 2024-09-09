@@ -25,9 +25,13 @@ def home():
 def ask_oracle():
     user_question = request.json.get('question')
 
-    # Using the replicate API to stream responses
+    # Using the replicate API to get responses
     try:
-        output = replicate.stream(
+        # Initialize the Replicate client with the API token
+        client = replicate.Client(api_token=api_token)
+
+        # Run the model and get the output
+        output = client.run(
             "meta/meta-llama-3-70b-instruct",  # Model ID
             input={
                 "top_k": 0,
@@ -44,7 +48,10 @@ def ask_oracle():
                 "log_performance_metrics": False
             },
         )
-        return jsonify({'response': output})
+
+        # Join the output (if it's a list) and return it as JSON
+        return jsonify({'response': ''.join(output) if isinstance(output, list) else output})
+
     except Exception as e:
         return jsonify({"error": str(e)})
 
