@@ -27,9 +27,8 @@ def ask_oracle():
 
     # Using the replicate API to stream responses
     try:
-        response = []
-        for event in replicate.stream(
-            "meta/meta-llama-3-70b-instruct",
+        output = replicate.run(
+            "meta/meta-llama-3-70b-instruct",  # Model ID
             input={
                 "top_k": 0,
                 "top_p": 0.9,
@@ -45,9 +44,7 @@ def ask_oracle():
                 "log_performance_metrics": False
             },
         ):
-            
-            response.append(str(event))
-        return jsonify({'response': ''.join(response)})
+         return jsonify({'response': output})
     except Exception as e:
         return jsonify({"error": str(e)})
 
