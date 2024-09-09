@@ -43,7 +43,7 @@ def ask_oracle():
                 "presence_penalty": 1.15,
                 "log_performance_metrics": False
             },
-        ):
+        )
          return jsonify({'response': output})
     except Exception as e:
         return jsonify({"error": str(e)})
