@@ -1,2 +1,2 @@
 # prophecy.ai
-wrapped AI application to ask or prophecies
+wrapped AI application to ask for prophecies
