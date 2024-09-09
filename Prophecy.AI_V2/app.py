@@ -46,8 +46,8 @@ def ask_oracle():
             },
         ):
             
-            response_text += str(event) + "\n"
-        return jsonify({"response": response_text})
+            response.append(str(event))
+        return jsonify({'response': ''.join(response)})
     except Exception as e:
         return jsonify({"error": str(e)})
 
