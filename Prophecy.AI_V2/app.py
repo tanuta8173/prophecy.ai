@@ -27,7 +27,7 @@ def ask_oracle():
 
     # Using the replicate API to stream responses
     try:
-        response = ""
+        response = []
         for event in replicate.stream(
             "meta/meta-llama-3-70b-instruct",
             input={
