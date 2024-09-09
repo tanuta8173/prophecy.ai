@@ -1,33 +1,29 @@
-async function askOracle() {
+function askOracle() {
     const questionInput = document.getElementById('question');
     const responseDiv = document.getElementById('response');
 
     const question = questionInput.value; // Get the question value
     responseDiv.innerHTML = ''; // Clear any previous response
-
+    
     // Add loading spinner with text
     responseDiv.innerHTML = '<div class="spinner"></div>The oracle is pondering...';
 
-    try {
-        // Make an asynchronous POST request
-        const response = await fetch('/ask', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ question: question })
-        });
-
-        // Parse the response as JSON
-        const data = await response.json();
-
+    fetch('/ask', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ question: question })
+    })
+    .then(response => response.json())
+    .then(data => {
         responseDiv.innerHTML = ''; // Clear any loading messages
         typeWriterEffect(data.response || 'The oracle remains silent...'); // Render the response with the typewriter effect
-
-    } catch (error) {
+    })
+    .catch(error => {
         responseDiv.innerHTML = 'The oracle encountered an error.';
         console.error('Error:', error);
-    }
+    });
 
     // Clear the input field after sending the question
     questionInput.value = '';
@@ -47,4 +43,3 @@ function typeWriterEffect(text) {
     }
     typeWriter();
 }
-
