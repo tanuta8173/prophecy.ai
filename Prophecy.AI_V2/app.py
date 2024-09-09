@@ -27,7 +27,7 @@ def ask_oracle():
 
     # Using the replicate API to stream responses
     try:
-        output = replicate.run(
+        output = replicate.stream(
             "meta/meta-llama-3-70b-instruct",  # Model ID
             input={
                 "top_k": 0,
